@@ -1,37 +1,10 @@
-import express from 'express';
-import 'express-async-errors';
-import { json } from 'body-parser'
-import { currentUserRouter } from './routes/current-user';
-import { signInRouter } from './routes/sign-in';
-import {signOutRouter } from './routes/sign-out';
-import { signUpRouter } from './routes/sign-up';
-import { errorHandler } from './middlewares/error-handler';
-import { NotFoundError } from './errors/not-found-error';
 import { connectToDB } from './utils/connect-to-db';
-import cookieSession from 'cookie-session';
 import { checkRequiredEnvVariables } from './utils/check-required-env-variables';
-
-const app = express();
+import { app } from './app';
 
 const requiredEnvVariables = ['JWT_SIGN', 'AUTH_MONGO_URI'];
 checkRequiredEnvVariables(requiredEnvVariables);
 connectToDB();
-
-app.use(json());
-app.use(
-    cookieSession({
-        signed: false,
-    })
-)
-app.use(currentUserRouter);
-app.use(signInRouter);
-app.use(signOutRouter);
-app.use(signUpRouter);
-
-app.all('*',async()=>{
-    throw new NotFoundError();
-});
-app.use(errorHandler);
 
 
 app.listen(3000,()=>{

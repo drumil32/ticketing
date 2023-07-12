@@ -9,10 +9,6 @@ export const errorHandler = (
     res: Response,
     next: NextFunction
 ) => {
-    console.log('error msg is');
-    console.log(error.message);
-    console.log('error is');
-    console.log(error)
     if( error instanceof CustomError ){
         return res.status(error.getStatusCode()).send({errors:error.serializeError()})
     }

@@ -14,12 +14,11 @@ router.post('/api/users/sign-in', [
         .withMessage('given email is not valid'),
     body('password')
         .trim()
-        .isLength({ min: 4, max: 20 })
+        .notEmpty()
         .withMessage('given password is not valid')
 ], validateRequest,
     async (req: Request, res: Response) => {
         const { email, password } = req.body;
-        console.log('we are here');
         const existingUser = await User.findOne({ email });
         if (!existingUser) {
             throw new BadRequestError('invalid credentials');
@@ -39,7 +38,6 @@ router.post('/api/users/sign-in', [
             jwt: userJWT
         }
 
-        // console.log(res);
         res.status(200).send(existingUser);
     });
 
