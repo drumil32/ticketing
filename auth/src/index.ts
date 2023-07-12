@@ -1,15 +1,15 @@
 import express from 'express';
 import 'express-async-errors';
 import { json } from 'body-parser'
-import { currentUserRouter } from './routes/currentUser';
-import { signInRouter } from './routes/signIn';
-import {signOutRouter } from './routes/signOut';
-import { signUpRouter } from './routes/signUp';
+import { currentUserRouter } from './routes/current-user';
+import { signInRouter } from './routes/sign-in';
+import {signOutRouter } from './routes/sign-out';
+import { signUpRouter } from './routes/sign-up';
 import { errorHandler } from './middlewares/error-handler';
 import { NotFoundError } from './errors/not-found-error';
-import { connectToDB } from './utils/connectToDB';
+import { connectToDB } from './utils/connect-to-db';
 import cookieSession from 'cookie-session';
-import { checkRequiredEnvVariables } from './utils/checkRequiredEnvVariables';
+import { checkRequiredEnvVariables } from './utils/check-required-env-variables';
 
 const app = express();
 
