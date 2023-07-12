@@ -7,10 +7,22 @@ import {signOutRouter } from './routes/signOut';
 import { signUpRouter } from './routes/signUp';
 import { errorHandler } from './middlewares/error-handler';
 import { NotFoundError } from './errors/not-found-error';
-
+import { connectToDB } from './utils/connectToDB';
+import cookieSession from 'cookie-session';
+import { checkRequiredEnvVariables } from './utils/checkRequiredEnvVariables';
 
 const app = express();
+
+const requiredEnvVariables = ['JWT_SIGN', 'AUTH_MONGO_URI'];
+checkRequiredEnvVariables(requiredEnvVariables);
+connectToDB();
+
 app.use(json());
+app.use(
+    cookieSession({
+        signed: false,
+    })
+)
 app.use(currentUserRouter);
 app.use(signInRouter);
 app.use(signOutRouter);
@@ -20,6 +32,7 @@ app.all('*',async()=>{
     throw new NotFoundError();
 });
 app.use(errorHandler);
+
 
 app.listen(3000,()=>{
     console.log('auth is listening on port 3000!!!');
