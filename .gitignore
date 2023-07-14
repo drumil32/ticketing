@@ -3,3 +3,4 @@
 **/.dockerignore
 infra
 skaffold.yaml
+**/.next

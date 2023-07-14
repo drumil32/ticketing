@@ -8,6 +8,7 @@ import { signUpRouter } from './routes/sign-up';
 import { errorHandler } from './middlewares/error-handler';
 import { NotFoundError } from './errors/not-found-error';
 import cookieSession from 'cookie-session';
+import cors from "cors";
 
 const app = express();
 
@@ -17,13 +18,15 @@ app.use(
         signed: false,
     })
 )
+app.use(cors());
 app.use(currentUserRouter);
 app.use(signInRouter);
 app.use(signOutRouter);
 app.use(signUpRouter);
 
-app.all('*', async () => {
-    throw new NotFoundError();
+app.all('*', async (req,res) => {
+    // throw new NotFoundError();
+    res.send('hello')
 });
 app.use(errorHandler);
 
