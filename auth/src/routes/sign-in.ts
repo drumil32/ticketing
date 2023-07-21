@@ -5,6 +5,11 @@ import { BadRequestError } from '../errors/bad-request-error';
 import { validateRequest } from '../middlewares/validate-request';
 import { Password } from '../service/password';
 import jwt from 'jsonwebtoken';
+import { Session } from 'express-session';
+
+interface CustomSession extends Session {
+  jwt: string;
+}
 
 const router = Router();
 
@@ -34,11 +39,11 @@ router.post('/api/users/sign-in', [
         }, process.env.JWT_SIGN!);
 
         // Store it on session object
-        req.session = {
-            jwt: userJWT
-        }
+        // req.session = {
+        //     jwt: userJWT
+        // }as CustomSession
 
-        res.status(200).send(existingUser);
+        res.status(200).send({user:existingUser,token:userJWT});
     });
 
 export { router as signInRouter };

@@ -4,6 +4,12 @@ import { User } from '../models/user-schema';
 import { BadRequestError } from '../errors/bad-request-error';
 import jwt from 'jsonwebtoken';
 import { validateRequest } from '../middlewares/validate-request';
+import { Session } from 'express-session';
+declare module 'express-session' {
+    interface SessionData {
+        jwtToken?: string;
+    }
+}
 
 const router = Router();
 
@@ -24,19 +30,12 @@ router.post('/api/users/sign-up', [
         }
         const user = User.build({ email, password });
         const resp = await user.save();
-
         // generating JWT
         const userJWT = jwt.sign({
             id: user.id,
             email: user.email
         }, process.env.JWT_SIGN!);
-
-        // Store it on session object
-        req.session = {
-            jwt: userJWT
-        }
-
-        res.status(201).send(resp);
+        return res.status(201).send({ user: user,token:userJWT });
     });
 
 export { router as signUpRouter };

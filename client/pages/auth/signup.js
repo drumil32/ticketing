@@ -1,15 +1,22 @@
 import { useState } from 'react';
 import Router from 'next/router';
 import useRequest from '../../hooks/use-request';
+import getConfig from "next/config";
+const { publicRuntimeConfig } = getConfig();
+import { useCookies } from 'react-cookie';
 
-export default () => {
+const signup = () => {
+  const [cookies, setCookies, removeCookies] = useCookies(["token"]);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { errors, doRequest } = useRequest({
-    url: "http://127.0.0.1:49651/api/users/sign-up",
+    url: `${publicRuntimeConfig.AUTH_URL}/api/users/sign-up`,
     method: "post",
     body: { email, password },
-    onSuccess: () => Router.push('/')
+    onSuccess: (data) => {
+      setCookies('token',data.token,{path:"/"});
+      Router.push('/')
+    }
   });
   const onSubmit = async (event) => {
     event.preventDefault();
@@ -41,3 +48,5 @@ export default () => {
     </form>
   );
 };
+
+export default signup;

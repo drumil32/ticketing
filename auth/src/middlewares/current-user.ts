@@ -1,14 +1,15 @@
 import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
+import { BadRequestError } from '../errors';
 
-interface UserPayload{
+interface UserPayload {
     id: string;
     email: string;
 }
 
-declare global{
-    namespace Express{
-        interface Request{
+declare global {
+    namespace Express {
+        interface Request {
             currentUser: UserPayload;
         }
     }
@@ -19,12 +20,16 @@ export const currentUser = (
     res: Response,
     next: NextFunction
 ) => {
-    if (!req.session?.jwt) {
+    if (!req.headers.authorization) {
         return next();
     }
     try {
-        const payload = jwt.verify(req.session.jwt, process.env.JWT_SIGN!) as UserPayload;
+        const token = req.headers.authorization?.split(' ')[1];
+        const payload = jwt.verify(token, process.env.JWT_SIGN!) as UserPayload;
         req.currentUser = payload;
-    } catch (err) {}
+    } catch (error) {
+        console.log(error);
+        throw new BadRequestError('token is changed!!!!!');
+    }
     next();
 }
