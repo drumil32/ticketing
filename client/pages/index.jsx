@@ -1,27 +1,15 @@
 import axios from "axios";
 import buildClient from "../api/build-client";
-import { useCookies } from 'react-cookie';
 import getConfig from "next/config";
-const { publicRuntimeConfig } = getConfig();
 
-const LandingPage = ({ currentUser }) => {
-  (currentUser)
-  const [cookies] = useCookies(["token"]);
-  const fun = async () => {
-    try {
-      const {token} = cookies;
-      const response = await axios.get(`${publicRuntimeConfig.AUTH_URL}/api/users/current-user`, {
-        headers: {
-          Authorization: 'Bearer ' + token
-        }
-      });
-      return response.data;
-    } catch (error) {
-      console.log(error.message);
-    }
-  }
-  fun();
-  return <h1>this is landing page</h1>
+const LandingPage = ({currentUser}) => {
+  
+  
+  return currentUser ?
+    <>
+      <h1>You are signed in</h1>
+    </>
+    : <h1>You are not signed in</h1>
 }
 
 // LandingPage.getInitialProps = async () => {

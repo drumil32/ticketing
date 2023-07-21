@@ -24,6 +24,7 @@ router.post('/api/users/sign-in', [
 ], validateRequest,
     async (req: Request, res: Response) => {
         const { email, password } = req.body;
+        console.log('we are inside sign-in')
         const existingUser = await User.findOne({ email });
         if (!existingUser) {
             throw new BadRequestError('invalid credentials');
@@ -42,7 +43,7 @@ router.post('/api/users/sign-in', [
         // req.session = {
         //     jwt: userJWT
         // }as CustomSession
-
+        console.log(existingUser)
         res.status(200).send({user:existingUser,token:userJWT});
     });
 

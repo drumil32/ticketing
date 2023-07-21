@@ -1,12 +1,12 @@
-import { useState } from 'react';
+import { useState,useContext } from 'react';
 import Router from 'next/router';
 import useRequest from '../../hooks/use-request';
 import getConfig from "next/config";
 const { publicRuntimeConfig } = getConfig();
-import { useCookies } from 'react-cookie';
+import { CookiesContext } from '../../Providers/CookieProvider';
 
-const signup = () => {
-  const [cookies, setCookies, removeCookies] = useCookies(["token"]);
+const Signup = () => {
+  const { setCookies } = useContext(CookiesContext);
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const { errors, doRequest } = useRequest({
@@ -49,4 +49,4 @@ const signup = () => {
   );
 };
 
-export default signup;
+export default Signup;

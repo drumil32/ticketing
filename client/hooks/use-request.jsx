@@ -8,12 +8,15 @@ const useRequest = ({ url, method, body, onSuccess }) => {
     const doRequest = async () => {
         try {
             setErrors('');
+            console.log('from do request')
             const response = await axios[method](url, body);
+            console.log(response);
             if (onSuccess) {
                 onSuccess(response.data)
             }
             return response.data;
         } catch (error) {
+            console.log('error occured')
             console.log(error)
             setErrors(
                 <div className="alert alert-danger">
