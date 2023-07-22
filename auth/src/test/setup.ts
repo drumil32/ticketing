@@ -29,7 +29,7 @@ declare global {
     var signin: () => Promise<string[]>;
   }
 
-global.signin = async () => {
+  global.signin = async () => {
     const email = 'test@test.com';
     const password = 'password';
     const response = await request(app)
@@ -38,6 +38,8 @@ global.signin = async () => {
             email,password
         })
         .expect(201);
-    const cookie = response.get('Set-Cookie');
-    return cookie;
+    console.log(response.body);
+    console.log(response.body.token);
+    const token = response.body.token;
+    return token;
 }

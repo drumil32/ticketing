@@ -3,6 +3,7 @@ import 'express-async-errors';
 import { json } from 'body-parser'
 import {NotFoundError,errorHandler} from '@micro_tickets/common';
 import cors from "cors";
+import { createTicketRouter } from './routes/create-ticket';
 
 const app = express();
 const corsOptions: cors.CorsOptions = {
@@ -12,7 +13,7 @@ const corsOptions: cors.CorsOptions = {
 
 app.use(cors(corsOptions));
 app.use(json());
-
+app.use(createTicketRouter);
 
 app.all('*', async (req, res) => {
     throw new NotFoundError();

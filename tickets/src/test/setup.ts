@@ -38,6 +38,6 @@ global.signin = async () => {
             email,password
         })
         .expect(201);
-    const cookie = response.get('Set-Cookie');
-    return cookie;
+    const token = response.body.token;
+    return token;
 }

@@ -2,7 +2,7 @@ import request from 'supertest';
 import { app } from '../../app';
 
 it('returns a 201 on successfull signup',async()=>{
-    return request(app)
+    const response = await request(app)
         .post('/api/users/sign-up')
         .send({
             email:'test@test.com',
@@ -66,5 +66,5 @@ it('sets a cookie after a successfull signup',async()=>{
             password: 'password'
         })
         .expect(201);
-    expect(response.get('Set-Cookie')).toBeDefined()
+    expect(response.body.token).toBeDefined()
 })
