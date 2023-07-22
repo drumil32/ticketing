@@ -1,8 +1,7 @@
 import { Router, Request, Response } from 'express';
 import { body } from 'express-validator';
 import { User } from '../models/user-schema';
-import { BadRequestError } from '../errors/bad-request-error';
-import { validateRequest } from '../middlewares/validate-request';
+import { validateRequest,BadRequestError } from '@micro_tickets/common';
 import { Password } from '../service/password';
 import jwt from 'jsonwebtoken';
 import { Session } from 'express-session';

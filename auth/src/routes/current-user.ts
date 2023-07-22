@@ -1,5 +1,5 @@
 import { Router, Request, Response } from 'express';
-import { currentUser, requireAuth } from '../middlewares';
+import { currentUser } from '@micro_tickets/common';
 
 const router = Router();
 

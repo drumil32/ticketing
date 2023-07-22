@@ -5,6 +5,7 @@ import { useCookies } from 'react-cookie';
 import { useEffect, useState } from "react";
 const { publicRuntimeConfig } = getConfig();
 import axios from "axios";
+import CookiesProvider from '../Providers/CookieProvider';
 
 const _app = ({ Component, pageProps }) => {
     const [currentUser, setCurrentUser] = useState(null);

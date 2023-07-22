@@ -1,10 +1,8 @@
 import { Router, Request, Response } from 'express';
 import { body } from 'express-validator';
 import { User } from '../models/user-schema';
-import { BadRequestError } from '../errors/bad-request-error';
 import jwt from 'jsonwebtoken';
-import { validateRequest } from '../middlewares/validate-request';
-import { Session } from 'express-session';
+import { validateRequest,BadRequestError } from '@micro_tickets/common'
 declare module 'express-session' {
     interface SessionData {
         jwtToken?: string;

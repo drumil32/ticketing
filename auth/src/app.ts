@@ -5,14 +5,13 @@ import { currentUserRouter } from './routes/current-user';
 import { signInRouter } from './routes/sign-in';
 import { signOutRouter } from './routes/sign-out';
 import { signUpRouter } from './routes/sign-up';
-import { errorHandler } from './middlewares/error-handler';
-import { NotFoundError } from './errors/not-found-error';
+import { NotFoundError,errorHandler } from '@micro_tickets/common';
 import session, { SessionOptions } from 'express-session';
 import cors from "cors";
 
 const app = express();
 const corsOptions: cors.CorsOptions = {
-  origin: 'http://127.0.0.1:59279', // Update with your frontend URL
+  origin: `${process.env.CLIENT_URL}`, // Update with your frontend URL
   credentials: true,
 };
 

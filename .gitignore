@@ -5,3 +5,4 @@ infra
 skaffold.yaml
 **/.next
 **/.env
+other-yaml-files/*
