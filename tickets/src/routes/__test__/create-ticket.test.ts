@@ -1,8 +1,9 @@
 import request from 'supertest';
-import {app} from '../../app';
+import { app } from '../../app';
 import { Ticket } from '../../models/ticket-schema';
+import mongoose from 'mongoose';
 
-it('has a route handler linsting to api/tickets for post request',async()=>{
+it('has a route handler linsting to api/tickets for post request', async () => {
     const response = await request(app)
         .post('/api/create-ticket')
         .send({});
@@ -17,7 +18,7 @@ it('can only be accessed if user is signed in',async()=>{
 });
 
 it('returns status other than 401 if the user is signed in',async() => {
-    const token = await signin();
+const token = await signin("abc34@g.com",new mongoose.Types.ObjectId().toHexString());
     const response = await request(app)
         .post('/api/create-ticket')
         .set('Authorization', `Bearer ${token}`)
@@ -26,7 +27,7 @@ it('returns status other than 401 if the user is signed in',async() => {
 })
 
 it('returns an error if an invalid title is provided',async()=>{
-    const token = await signin();
+const token = await signin("abc34@g.com",new mongoose.Types.ObjectId().toHexString());
     await request(app)
         .post('/api/create-ticket')
         .set('Authorization', `Bearer ${token}`)
@@ -43,7 +44,7 @@ it('returns an error if an invalid title is provided',async()=>{
 });
 
 it('returns an error if an invalid price is provided',async()=>{
-    const token = await signin();
+const token = await signin("abc34@g.com",new mongoose.Types.ObjectId().toHexString());
     await request(app)
         .post('/api/create-ticket')
         .set('Authorization', `Bearer ${token}`)
@@ -62,7 +63,7 @@ it('returns an error if an invalid price is provided',async()=>{
 it('create a ticket with valid parameters',async()=>{
     let tickets = await Ticket.find({});
     expect(tickets.length).toEqual(0);
-    const token = await signin();
+    const token = await signin("abc34@g.com", new mongoose.Types.ObjectId().toHexString());
     const response = await request(app)
         .post('/api/create-ticket')
         .set('Authorization', `Bearer ${token}`)
@@ -71,6 +72,7 @@ it('create a ticket with valid parameters',async()=>{
             price: 20
         }).expect(201);
     tickets = await Ticket.find({});
+    console.log(tickets);
     expect(tickets.length).toEqual(1);
     expect(tickets[0].price).toEqual(20);
     expect(tickets[0].title).toEqual('asdfsdf');

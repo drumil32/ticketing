@@ -27,13 +27,13 @@ afterAll(async () => {
 });
 
 declare global {
-    var signin: () => Promise<string>;
+    var signin: (email:string,id:string) => Promise<string>;
 }
 
-global.signin = async () => {
+global.signin = async (email:string,id:string) => {
     const userPayload = {
-        email: "abc34@g.com",
-        id: "64bc0a32c775b61584f8b689"
+        email,
+        id
     };
     const token = jwt.sign(userPayload,process.env.JWT_SIGN!);
     return token;

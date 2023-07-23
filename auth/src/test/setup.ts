@@ -38,8 +38,8 @@ declare global {
             email,password
         })
         .expect(201);
-    console.log(response.body);
-    console.log(response.body.token);
+    // console.log(response.body);
+    // console.log(response.body.token);
     const token = response.body.token;
     return token;
 }

@@ -12,21 +12,21 @@ router.post('/api/create-ticket', requireAuth, [
         .withMessage('Title is required'),
     body('price')
         .isFloat({ gt: 0 })
-        .withMessage('price must be a greater than zero')
+        .withMessage('price must be provided and greater than zero')
 ], validateRequest, async(req: Request, res: Response) => {
     const {title,price} = req.body;
     const {id:userId} = req.currentUser;
-    console.log(userId)
+    // console.log(userId)
     const ticketExists = await Ticket.find({title});
-    console.log(ticketExists)
-    console.log(ticketExists.length)
+    // console.log(ticketExists)
+    // console.log(ticketExists.length)
     if( ticketExists.length ){
         throw new BadRequestError('ticket with this title already exists');
     }
     const ticket = Ticket.build({title,price,userId});
     await ticket.save();
-    console.log(ticket);
-    res.status(201).send(ticket);
+    // console.log(ticket);
+    res.status(201).send({ticket});
 });
 
 export { router as createTicketRouter }

@@ -5,6 +5,8 @@ import { NotFoundError, errorHandler, currentUser } from '@micro_tickets/common'
 import cors from "cors";
 import { createTicketRouter } from './routes/create-ticket';
 import { showTicketRouter } from './routes/show-ticket';
+import { showAllTicketsRouter } from './routes/show-all-tickets';
+import { updateTicketRouter } from './routes/update-ticket';
 
 const app = express();
 const corsOptions: cors.CorsOptions = {
@@ -16,10 +18,12 @@ app.use(cors(corsOptions));
 app.use(json());
 app.use(currentUser);
 app.use(createTicketRouter);
-app.use(showTicketRouter)
+app.use(showTicketRouter);
+app.use(showAllTicketsRouter);
+app.use(updateTicketRouter);
 
 app.all('*', async (req, res) => {
-  throw new NotFoundError();
+  throw new NotFoundError('Route is Not Found');
 });
 
 app.use(errorHandler);

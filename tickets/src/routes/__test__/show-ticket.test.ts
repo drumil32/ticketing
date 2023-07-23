@@ -16,10 +16,10 @@ it('returns a 400 if ticket id is not vaild',async()=>{
         .get(`/api/show-ticket/${id}`)
         .send()
         .expect(400);
-})
+});
 
 it('return a ticket if ticket is found', async () => {
-    const token = await signin();
+    const token = await signin("abc34@g.com",new mongoose.Types.ObjectId().toHexString());
     let response = await request(app)
         .post('/api/create-ticket')
         .set('Authorization', `Bearer ${token}`)
@@ -27,7 +27,7 @@ it('return a ticket if ticket is found', async () => {
             title: 'asdfsdf',
             price: 20
         }).expect(201);
-    const {title,price,userId,id} = response.body;
+    const {title,price,userId,id} = response.body.ticket;
     response = await request(app)
         .get(`/api/show-ticket/${id}`)
         .send()
@@ -36,8 +36,4 @@ it('return a ticket if ticket is found', async () => {
     expect(response.body.ticket.price).toEqual(price);
     expect(response.body.ticket.userId).toEqual(userId);
     expect(response.body.ticket.id).toEqual(id);
-});
-
-it('',async () => {
-
 });

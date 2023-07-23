@@ -38,7 +38,7 @@ app.use(signOutRouter);
 app.use(signUpRouter);
 
 app.all('*', async (req, res) => {
-    throw new NotFoundError();
+    throw new NotFoundError('Route is Not Found');
 });
 app.use(errorHandler);
 
