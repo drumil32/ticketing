@@ -1,6 +1,7 @@
 import request from 'supertest';
 import { app } from '../../app';
 import mongoose from 'mongoose';
+import { natsWrapper } from '../../nats-wrapper';
 
 const createTicket = async (title: string, price: number, email: string, userId: string) => {
     const token = await signin(email, userId);
@@ -119,3 +120,23 @@ it('returns 200 if the user provides valid inputs and ticket updated', async () 
     expect(response.body.ticket.title).toEqual('second');
     expect(response.body.ticket.price).toEqual(20);
 });
+
+it('publishes an event', async () => {
+    const token = await signin("abc@g.com", new mongoose.Types.ObjectId().toHexString());
+    let response = await request(app)
+        .post('/api/create-ticket')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            title: 'first',
+            price: 10
+        });
+    const ticketId = response.body.ticket.id;
+    response = await request(app)
+        .put(`/api/update-ticket/${ticketId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            title: 'second',
+            price: 20
+        }).expect(200);
+    expect(natsWrapper.client.publish).toHaveBeenCalled();
+})

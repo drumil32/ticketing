@@ -2,8 +2,10 @@ import { BadRequestError, requireAuth, validateRequest } from '@micro_tickets/co
 import { Router, Request, Response } from 'express';
 import { body } from 'express-validator';
 import { Ticket } from '../models/ticket-schema';
+import { TicketCreatedPublisher } from '../events/publisher/ticket-created-publisher';
+import { natsWrapper } from '../nats-wrapper';
 
-const router = Router();
+const router = Router()
 
 router.post('/api/create-ticket', requireAuth, [
     body('title')
@@ -16,16 +18,18 @@ router.post('/api/create-ticket', requireAuth, [
 ], validateRequest, async(req: Request, res: Response) => {
     const {title,price} = req.body;
     const {id:userId} = req.currentUser;
-    // console.log(userId)
     const ticketExists = await Ticket.find({title});
-    // console.log(ticketExists)
-    // console.log(ticketExists.length)
     if( ticketExists.length ){
         throw new BadRequestError('ticket with this title already exists');
     }
     const ticket = Ticket.build({title,price,userId});
     await ticket.save();
-    // console.log(ticket);
+    new TicketCreatedPublisher(natsWrapper.client).publish({
+        id: ticket.id,
+        title: ticket.title,
+        price: ticket.price,
+        userId: ticket.userId
+    });
     res.status(201).send({ticket});
 });
 

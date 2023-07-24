@@ -2,6 +2,7 @@ import request from 'supertest';
 import { app } from '../../app';
 import { Ticket } from '../../models/ticket-schema';
 import mongoose from 'mongoose';
+import { natsWrapper } from '../../nats-wrapper';
 
 it('has a route handler linsting to api/tickets for post request', async () => {
     const response = await request(app)
@@ -77,3 +78,15 @@ it('create a ticket with valid parameters',async()=>{
     expect(tickets[0].price).toEqual(20);
     expect(tickets[0].title).toEqual('asdfsdf');
 });
+
+it('publishes an event', async () => {
+    const token = await signin("abc34@g.com", new mongoose.Types.ObjectId().toHexString());
+    const response = await request(app)
+        .post('/api/create-ticket')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            title: 'asdfsdf',
+            price: 20
+        }).expect(201);
+    expect(natsWrapper.client.publish).toHaveBeenCalled();
+})
