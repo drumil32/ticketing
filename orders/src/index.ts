@@ -5,8 +5,8 @@ import { connectToNats } from './utils/connect-to-nats';
 
 const requiredEnvVariables = ['JWT_SIGN', 'MONGO_URI','NATS_URL','NATS_CLIENT_ID','NATS_CLUSTER_ID','EXPIRATION_WINDOW_SECONDS'];
 checkRequiredEnvVariables(requiredEnvVariables);
-connectToDB();
 connectToNats();
+connectToDB();
 
 app.listen(3000,()=>{
     console.log('orders is listening on port 3000!!!');

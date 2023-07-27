@@ -1,10 +1,11 @@
-import { BadRequestError, NotFoundError, OrderStatus, requireAuth, validateRequest } from '@micro_tickets/common';
+import { BadRequestError, NotFoundError, requireAuth, validateRequest } from '@micro_tickets/common';
 import { Router, Request, Response } from 'express';
 import { body } from 'express-validator';
 import { natsWrapper } from '../nats-wrapper';
 import mongoose from 'mongoose';
 import { Ticket } from '../models/ticket-schema';
-import { Order } from '../models/order-schema';
+import { Order, OrderStatus } from '../models/order-schema';
+import { OrderCreatedPublisher } from '../events/publisher/order-created-publisher';
 
 const router = Router()
 
@@ -26,21 +27,35 @@ router.post('/api/create-order', [
 
     // we are checking whether the ticket is reversed or not
     const isReversed = await ticket.isReversed();
-    if( isReversed ){
+    if (isReversed) {
         throw new BadRequestError('Ticket is already reversed');
     }
 
     const expiration = new Date();
-    expiration.setSeconds(expiration.getSeconds()+Number(process.env.EXPIRATION_WINDOW_SECONDS));
-
+    expiration.setSeconds(expiration.getSeconds() + Number(process.env.EXPIRATION_WINDOW_SECONDS));
+    console.log(expiration)
+    console.log(process.env.EXPIRATION_WINDOW_SECONDS)
     const order = Order.build({
-        userId : req.currentUser.id,
+        userId: req.currentUser.id,
         status: OrderStatus.Created,
         expiresAt: expiration,
-        ticket
+        ticket:ticket.id
     });
+    console.log(order)
+    console.log(order.expiresAt)
     await order.save();
-    res.status(201).send({order});
+    console.log('order is going to be published')
+    new OrderCreatedPublisher(natsWrapper.client).publish({
+        id: order.id,
+        expiresAt: order.expiresAt.toISOString(),
+        ticket:{
+            id: ticket.id,
+            price: ticket.price
+        },
+        userId: order.userId,
+        version: order.version
+    });
+    res.status(201).send({ order });
 });
 
 export { router as createOrderRouter }

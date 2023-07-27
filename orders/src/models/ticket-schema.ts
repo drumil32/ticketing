@@ -1,7 +1,9 @@
 import mongoose from "mongoose";
 import { Order,OrderStatus } from "./order-schema";
+import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 
 interface TicketAttrs {
+    id: string;
     title: string;
     price: number;
 }
@@ -14,6 +16,7 @@ export interface TicketDoc extends mongoose.Document {
     title: string;
     price: number;
     isReversed() : Promise<boolean>;
+    version: number;
 }
 
 const ticketSchema = new mongoose.Schema({
@@ -29,7 +32,6 @@ const ticketSchema = new mongoose.Schema({
 },{
     toJSON:{
         transform(doc,ret){
-            delete ret.__v;
             ret.id = ret._id;
             delete ret._id;
         }
@@ -37,7 +39,11 @@ const ticketSchema = new mongoose.Schema({
 });
 
 ticketSchema.statics.build = (attrs:TicketAttrs):TicketDoc=>{
-    return new Ticket(attrs);
+    return new Ticket({
+        _id: attrs.id,
+        title: attrs.title,
+        price: attrs.price
+    });
 }
 ticketSchema.methods.isReversed = async function(){
     const existingOrder = await Order.findOne({
@@ -53,6 +59,9 @@ ticketSchema.methods.isReversed = async function(){
     if( existingOrder ) return true;
     else    return false;
 }
+
+ticketSchema.set('versionKey', 'version');
+ticketSchema.plugin(updateIfCurrentPlugin);
 
 const Ticket = mongoose.model<TicketDoc,TicketModel>("Ticket",ticketSchema);
 

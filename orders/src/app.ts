@@ -5,7 +5,7 @@ import { NotFoundError, errorHandler, currentUser } from '@micro_tickets/common'
 import cors from "cors";
 import { showAllOrdersRouter } from './routes/show-all-orders';
 import { showOrderRouter } from './routes/show-order';
-import { deleteOrderRouter } from './routes/delete-order';
+import { cancelOrderRouter } from './routes/cancel-order';
 import { createOrderRouter } from './routes/create-order';
 
 const app = express();
@@ -19,7 +19,7 @@ app.use(json());
 app.use(currentUser);
 app.use(showAllOrdersRouter);
 app.use(showOrderRouter);
-app.use(deleteOrderRouter);
+app.use(cancelOrderRouter);
 app.use(createOrderRouter);
 
 app.all('*', async (req, res) => {

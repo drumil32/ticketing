@@ -1,7 +1,8 @@
 import mongoose from "mongoose";
-import { DatabaseConnectionError } from "@micro_tickets/common";
+import { DatabaseConnectionError,Subjects } from "@micro_tickets/common";
 
 export const connectToDB = async () => {
+    console.log(Subjects);
     try {
         const resp = await mongoose.connect(process.env.MONGO_URI!);
         console.log('database is conneccted');

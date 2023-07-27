@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 import { OrderStatus } from '@micro_tickets/common';
 import { TicketDoc } from "./ticket-schema";
+import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 
 export { OrderStatus };
 
@@ -20,6 +21,7 @@ interface OrderDoc extends mongoose.Document {
     status: OrderStatus;
     expiresAt: Date;
     ticket: TicketDoc;
+    version: number;
 }
 
 const orderSchema = new mongoose.Schema({
@@ -33,7 +35,7 @@ const orderSchema = new mongoose.Schema({
         enum: Object.values(OrderStatus),
         default: OrderStatus.Created
     },
-    expireAt: {
+    expiresAt: {
         type: mongoose.Schema.Types.Date
     },
     ticket: {
@@ -53,6 +55,9 @@ const orderSchema = new mongoose.Schema({
 orderSchema.statics.build = (attrs: OrderAttrs): OrderDoc => {
     return new Order(attrs);
 }
+
+orderSchema.set('versionKey', 'version');
+orderSchema.plugin(updateIfCurrentPlugin);
 
 const Order = mongoose.model<OrderDoc, OrderModel>("Order", orderSchema);
 

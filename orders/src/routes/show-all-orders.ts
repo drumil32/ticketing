@@ -2,11 +2,13 @@ import { BadRequestError, requireAuth, validateRequest } from '@micro_tickets/co
 import { Router, Request, Response } from 'express';
 import { body } from 'express-validator';
 import { natsWrapper } from '../nats-wrapper';
+import { Order } from '../models/order-schema';
 
 const router = Router()
 
-router.post('/api/show-all-order', requireAuth, [], validateRequest, async(req: Request, res: Response) => {
-    res.send();
+router.get('/api/show-all-order', requireAuth, async(req: Request, res: Response) => {
+    const orders = await Order.find({userId:req.currentUser.id}).populate('ticket');
+    return res.status(200).send({orders});
 });
 
 export { router as showAllOrdersRouter }
