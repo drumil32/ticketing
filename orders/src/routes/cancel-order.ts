@@ -4,7 +4,7 @@ import { body } from 'express-validator';
 import { natsWrapper } from '../nats-wrapper';
 import mongoose from 'mongoose';
 import { Order } from '../models/order-schema';
-import { OrderCancelledPublisher } from '../events/publisher/order-cancelled-publisher';
+import { OrderCancelledPublisher } from '../events/publishers/order-cancelled-publisher';
 
 const router = Router()
 
@@ -14,7 +14,7 @@ router.put('/api/cancel-order/:orderId', requireAuth, async (req: Request, res: 
     if (false === isValidId) {
         throw new BadRequestError('given order id is not valid');
     }
-    const order = await Order.findById(orderId).populate('ticket');
+    const order = await Order.findById(orderId);
     if (!order) {
         throw new NotFoundError('order with the given id is not found');
     }
@@ -23,10 +23,17 @@ router.put('/api/cancel-order/:orderId', requireAuth, async (req: Request, res: 
     }
     order.status = OrderStatus.Cancelled;
     await order.save(); // here what will happen with ticket field we populated it above !!!
+    console.log({
+        id: order.id,
+        ticket: {
+            id: order.ticket,
+        },
+        version: order.version
+    })
     new OrderCancelledPublisher(natsWrapper.client).publish({
         id: order.id,
         ticket: {
-            id: order.ticket.id,
+            id: order.ticket,
         },
         version: order.version
     });

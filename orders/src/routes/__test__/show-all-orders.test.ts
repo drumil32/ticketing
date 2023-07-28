@@ -2,7 +2,6 @@ import request from 'supertest';
 import { app } from '../../app';
 import { Ticket } from '../../models/ticket-schema';
 import mongoose from 'mongoose';
-import { Order, OrderStatus } from '../../models/order-schema';
 
 it("return 401 if the use is not authorized", async () => {
     return request(app)
@@ -12,9 +11,9 @@ it("return 401 if the use is not authorized", async () => {
 });
 
 it('fetches orders for an particular user', async () => {
-    const ticket1 = await Ticket.build({ title: 'first', price: 10 }).save();
-    const ticket2 = await Ticket.build({ title: 'second', price: 20 }).save();
-    const ticket3 = await Ticket.build({ title: 'third', price: 30 }).save();
+    const ticket1 = await Ticket.build({ title: 'first', price: 10,id: new mongoose.Types.ObjectId().toHexString() }).save();
+    const ticket2 = await Ticket.build({ title: 'second', price: 20,id: new mongoose.Types.ObjectId().toHexString() }).save();
+    const ticket3 = await Ticket.build({ title: 'third', price: 30,id: new mongoose.Types.ObjectId().toHexString() }).save();
 
     const userId1 = new mongoose.Types.ObjectId().toString();
     const userId2 = new mongoose.Types.ObjectId().toString();

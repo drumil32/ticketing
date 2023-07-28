@@ -45,7 +45,7 @@ it("returns 404 if the ticket does not exist", async () => {
 });
 
 it('returns 400 if ticket is already reversed',async()=>{
-    const ticket = await Ticket.build({title:'first',price:20}).save();
+    const ticket = await Ticket.build({title:'first',price:20,id: new mongoose.Types.ObjectId().toHexString()}).save();
     const userId = new mongoose.Types.ObjectId().toString();
     const expiration = new Date();
     expiration.setSeconds(expiration.getSeconds() + Number(process.env.EXPIRATION_WINDOW_SECONDS));
@@ -68,7 +68,7 @@ it('returns 400 if ticket is already reversed',async()=>{
 
 
 it('returns 201 if ticket is successfully reversed',async()=>{
-    const ticket = await Ticket.build({title:'first',price:20}).save();
+    const ticket = await Ticket.build({title:'first',price:20,id: new mongoose.Types.ObjectId().toHexString()}).save();
 
     const token = await signin('drumil@gm.com','123321');
     return request(app)
@@ -82,7 +82,7 @@ it('returns 201 if ticket is successfully reversed',async()=>{
 it.todo('in above test you need to check in db as well YOU KNOW THE REASON FOR THIS RIGHT OR REFERE KEEP NOTE');
 
 it('emits an order created event',async()=>{
-    const ticket = await Ticket.build({title:'first',price:20}).save();
+    const ticket = await Ticket.build({title:'first',price:20,id: new mongoose.Types.ObjectId().toHexString()}).save();
 
     const token = await signin('drumil@gm.com','123321');
     await request(app)

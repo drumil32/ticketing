@@ -33,7 +33,7 @@ it("returns 404 if the order does not exist", async () => {
 });
 
 it("returns 401 if user doesn't own the order", async () => {
-    const ticket = await Ticket.build({ title: 'first', price: 20 }).save();
+    const ticket = await Ticket.build({ title: 'first', price: 20,id: new mongoose.Types.ObjectId().toHexString() }).save();
     const userId1 = new mongoose.Types.ObjectId();
 
     const token1 = await signin('drumil@gm.com', userId1.toString());
@@ -55,7 +55,7 @@ it("returns 401 if user doesn't own the order", async () => {
 });
 
 it("returns 200 if order is updated sucessfully", async () => {
-    const ticket = await Ticket.build({ title: 'first', price: 20 }).save();
+    const ticket = await Ticket.build({ title: 'first', price: 20,id: new mongoose.Types.ObjectId().toHexString() }).save();
     const userId = new mongoose.Types.ObjectId();
 
     const token = await signin('drumil@gm.com', userId.toString());
@@ -81,7 +81,7 @@ it("returns 200 if order is updated sucessfully", async () => {
 
 // it('emits an order cancelled event',async());
 it('emits an order cancelled event', async () => {
-    const ticket = await Ticket.build({ title: 'first', price: 20 }).save();
+    const ticket = await Ticket.build({ title: 'first', price: 20,id: new mongoose.Types.ObjectId().toHexString() }).save();
     const userId = new mongoose.Types.ObjectId();
 
     const token = await signin('drumil@gm.com', userId.toString());

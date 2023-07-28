@@ -5,7 +5,7 @@ import { natsWrapper } from '../nats-wrapper';
 import mongoose from 'mongoose';
 import { Ticket } from '../models/ticket-schema';
 import { Order, OrderStatus } from '../models/order-schema';
-import { OrderCreatedPublisher } from '../events/publisher/order-created-publisher';
+import { OrderCreatedPublisher } from '../events/publishers/order-created-publisher';
 
 const router = Router()
 

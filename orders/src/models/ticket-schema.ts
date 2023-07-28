@@ -1,5 +1,5 @@
 import mongoose from "mongoose";
-import { Order,OrderStatus } from "./order-schema";
+import { Order, OrderStatus } from "./order-schema";
 import { updateIfCurrentPlugin } from "mongoose-update-if-current";
 
 interface TicketAttrs {
@@ -9,13 +9,14 @@ interface TicketAttrs {
 }
 
 interface TicketModel extends mongoose.Model<any> {
-    build(attrs: TicketAttrs): TicketDoc
+    build(attrs: TicketAttrs): TicketDoc;
+    findByEvent(eventData: { id: string, version: number }): Promise<TicketDoc | null>;
 }
 
 export interface TicketDoc extends mongoose.Document {
     title: string;
     price: number;
-    isReversed() : Promise<boolean>;
+    isReversed(): Promise<boolean>;
     version: number;
 }
 
@@ -29,23 +30,28 @@ const ticketSchema = new mongoose.Schema({
         min: 0,
         required: [true, 'price is required']
     }
-},{
-    toJSON:{
-        transform(doc,ret){
+}, {
+    toJSON: {
+        transform(doc, ret) {
             ret.id = ret._id;
             delete ret._id;
         }
     }
 });
 
-ticketSchema.statics.build = (attrs:TicketAttrs):TicketDoc=>{
+ticketSchema.statics.findByEvent = (eventData: { id: string, version: number }) => {
+    return Ticket.findOne({ _id: eventData.id, version: eventData.version - 1 });
+}
+
+ticketSchema.statics.build = (attrs: TicketAttrs): TicketDoc => {
     return new Ticket({
         _id: attrs.id,
         title: attrs.title,
         price: attrs.price
     });
 }
-ticketSchema.methods.isReversed = async function(){
+
+ticketSchema.methods.isReversed = async function () {
     const existingOrder = await Order.findOne({
         ticket: this,
         status: {
@@ -56,13 +62,13 @@ ticketSchema.methods.isReversed = async function(){
             ]
         }
     });
-    if( existingOrder ) return true;
-    else    return false;
+    if (existingOrder) return true;
+    else return false;
 }
 
 ticketSchema.set('versionKey', 'version');
 ticketSchema.plugin(updateIfCurrentPlugin);
 
-const Ticket = mongoose.model<TicketDoc,TicketModel>("Ticket",ticketSchema);
+const Ticket = mongoose.model<TicketDoc, TicketModel>("Ticket", ticketSchema);
 
-export {Ticket};
+export { Ticket };
