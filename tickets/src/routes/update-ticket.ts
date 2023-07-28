@@ -3,7 +3,7 @@ import { Ticket } from '../models/ticket-schema';
 import { BadRequestError, NotAuthorizedError, NotFoundError, requireAuth, validateRequest } from '@micro_tickets/common';
 import mongoose from 'mongoose';
 import { body } from 'express-validator';
-import { TicketUpdatedPublisher } from '../events/publisher/ticket-updated-publisher';
+import { TicketUpdatedPublisher } from '../events/publishers/ticket-updated-publisher';
 import { natsWrapper } from '../nats-wrapper';
 
 const router = Router();
@@ -25,6 +25,9 @@ router.put('/api/update-ticket/:id', requireAuth,[
     const ticket = await Ticket.findById(ticketId);
     if( !ticket ){
         throw new NotFoundError('ticket not found');
+    }
+    if( ticket.orderId ){
+        throw new BadRequestError('Cannot edit a reserved ticket');
     }
     console.log('from update ticket')
     console.log(ticket);

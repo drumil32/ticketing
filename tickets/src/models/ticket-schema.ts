@@ -17,6 +17,7 @@ interface TicketDoc extends mongoose.Document {
     userId: string;
     createAt: string;
     version: number;
+    orderId?: string;
 }
 
 const ticketSchema = new mongoose.Schema({
@@ -36,6 +37,9 @@ const ticketSchema = new mongoose.Schema({
         type: Date,
         default: Date.now,
     },
+    orderId: {
+        type: String,
+    }
 }, {
     toJSON: {
         transform(doc, ret) {

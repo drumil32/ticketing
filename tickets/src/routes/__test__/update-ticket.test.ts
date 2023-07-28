@@ -2,6 +2,7 @@ import request from 'supertest';
 import { app } from '../../app';
 import mongoose from 'mongoose';
 import { natsWrapper } from '../../nats-wrapper';
+import { Ticket } from '../../models/ticket-schema';
 
 const createTicket = async (title: string, price: number, email: string, userId: string) => {
     const token = await signin(email, userId);
@@ -97,6 +98,28 @@ it('returns 400 if the user provides an invalid title or price', async () => {
             price: 10
         }).expect(400);
 });
+
+it('returns 400 if the ticket is reserved',async()=>{
+    const token = await signin("abc@g.com", new mongoose.Types.ObjectId().toHexString());
+    let response = await request(app)
+        .post('/api/create-ticket')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            title: 'first',
+            price: 10
+        });
+        const ticketId = response.body.ticket.id;
+        const ticket = await Ticket.findById(ticketId);
+        ticket.set({orderId:new mongoose.Types.ObjectId().toHexString()});
+        await ticket.save();
+    response = await request(app)
+        .put(`/api/update-ticket/${ticketId}`)
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            title: 'second',
+            price: 20
+        }).expect(400);
+})
 
 it('returns 200 if the user provides valid inputs and ticket updated', async () => {
     const token = await signin("abc@g.com", new mongoose.Types.ObjectId().toHexString());

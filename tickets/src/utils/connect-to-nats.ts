@@ -1,5 +1,6 @@
 import { natsWrapper } from '../nats-wrapper';
 import { randomBytes } from 'crypto'
+import { initializeListeners } from './initialize-listeners';
 
 export const connectToNats = async () => {
     try {
@@ -8,6 +9,7 @@ export const connectToNats = async () => {
             console.log('NATS connection closed');
             process.exit();
         })
+        initializeListeners();
         process.on('SIGINT',()=> natsWrapper.client.close());
         process.on('SIGTERM',()=> natsWrapper.client.close());
     } catch (error) {
