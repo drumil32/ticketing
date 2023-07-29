@@ -3,6 +3,7 @@ import { Router, Request, Response } from "express";
 import { body } from "express-validator";
 import { Order } from "../models/order-schema";
 import mongoose from "mongoose";
+import { stripe } from "../stripe";
 
 const router = Router();
 
@@ -35,7 +36,13 @@ router.post('/api/create-charge', requireAuth, [
         throw new BadRequestError('cannot pay for cancelled order')
     }
 
-    res.send({success:true});
+    stripe.charges.create({
+        currency:'usd',
+        amount: order.price*100,
+        source:token
+    });
+
+    res.status(201).send({success:true});
 
 });
 

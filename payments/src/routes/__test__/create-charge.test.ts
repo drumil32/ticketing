@@ -3,6 +3,9 @@ import { app } from '../../app';
 import mongoose from 'mongoose';
 import { Order } from '../../models/order-schema';
 import { OrderStatus } from '@micro_tickets/common';
+import { stripe } from '../../stripe';
+
+jest.mock('../../stripe');
 
 it('can only be accessed if user is signed in', async () => {
     await request(app)
@@ -112,4 +115,32 @@ it('returns a 400 when purchasing a cancelled order',async()=>{
             orderId: order.id
         })
         .expect(400);
+});
+
+it('returns a 201 with valid inputs',async()=>{
+    const userId = new mongoose.Types.ObjectId().toHexString();
+    const token = await signin("abc34@g.com", userId);
+    const order = Order.build({
+        id: new mongoose.Types.ObjectId().toHexString(),
+        userId,
+        status: OrderStatus.Created,
+        price: 10,
+        version: 0
+    });
+    await order.save();
+
+    const response = await request(app)
+        .post('/api/create-charge')
+        .set('Authorization', `Bearer ${token}`)
+        .send({
+            token: 'tok_visa',
+            orderId: order.id
+        })
+        .expect(201);
+        console.log(response.body)
+    const chargeOptions = (stripe.charges.create as jest.Mock).mock.calls[0][0];
+    console.log(chargeOptions)
+    expect(chargeOptions.source).toEqual('tok_visa');
+    expect(chargeOptions.currency).toEqual('usd');
+    expect(chargeOptions.amount).toEqual(order.price*100);
 })

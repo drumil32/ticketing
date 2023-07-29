@@ -3,7 +3,7 @@ import { checkRequiredEnvVariables } from './utils/check-required-env-variables'
 import { app } from './app';
 import { connectToNats } from './utils/connect-to-nats';
 
-const requiredEnvVariables = ['JWT_SIGN', 'MONGO_URI','NATS_URL','NATS_CLIENT_ID','NATS_CLUSTER_ID'];
+const requiredEnvVariables = ['JWT_SIGN', 'MONGO_URI','NATS_URL','NATS_CLIENT_ID','NATS_CLUSTER_ID','STRIPE_SECRET'];
 checkRequiredEnvVariables(requiredEnvVariables);
 connectToDB();
 connectToNats();
