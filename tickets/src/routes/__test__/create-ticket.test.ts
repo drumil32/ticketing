@@ -24,7 +24,7 @@ const token = await signin("abc34@g.com",new mongoose.Types.ObjectId().toHexStri
         .post('/api/create-ticket')
         .set('Authorization', `Bearer ${token}`)
         .send({});
-    expect(401);
+    expect(response.status).not.toBe(401);
 })
 
 it('returns an error if an invalid title is provided',async()=>{
