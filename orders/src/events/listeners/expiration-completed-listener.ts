@@ -1,21 +1,22 @@
-import { ExpirationCompeletedEvent, Listener, OrderStatus, Subjects } from "@micro_tickets/common";
+import { ExpirationCompletedEvent, Listener, OrderStatus, Subjects } from "@micro_tickets/common";
 import { Message } from "node-nats-streaming";
-import { queueGroupName } from "./queue-group-name";
 import { Order } from "../../models/order-schema";
 import { OrderCancelledPublisher } from "../publishers/order-cancelled-publisher";
+import { queueGroupName } from "./queue-group-name";
 
-export class ExpirationCompeletedListener extends Listener<ExpirationCompeletedEvent> {
+export class ExpirationCompeletedListener extends Listener<ExpirationCompletedEvent> {
     readonly subject = Subjects.ExpirationCompleted;
     readonly queueGroupName = queueGroupName;
-    async onMessage(data: ExpirationCompeletedEvent['data'], msg: Message) {
+    async onMessage(data: ExpirationCompletedEvent['data'], msg: Message) {
         const order = await Order.findById(data.orderId);
 
         if (!order) {
             throw new Error('order not found');
         }
 
-        if (order.status === OrderStatus.Created) {
-
+        if (order.status === OrderStatus.Complete) {
+            msg.ack();
+            return;
         }
 
         order.set({ status: OrderStatus.Cancelled });

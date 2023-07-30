@@ -4,6 +4,9 @@ import { body } from "express-validator";
 import { Order } from "../models/order-schema";
 import mongoose from "mongoose";
 import { stripe } from "../stripe";
+import { Payment } from "../models/payment-schema";
+import { PaymentCompeletedPublisher } from "../events/publishers/payment-completed-publisher";
+import { natsWrapper } from "../nats-wrapper";
 
 const router = Router();
 
@@ -36,13 +39,22 @@ router.post('/api/create-charge', requireAuth, [
         throw new BadRequestError('cannot pay for cancelled order')
     }
 
-    stripe.charges.create({
+    const charge = stripe.charges.create({
         currency:'usd',
         amount: order.price*100,
         source:token
     });
+    console.log('charge obj')
+    console.log(charge);
 
-    res.status(201).send({success:true});
+    // const payment = Payment.build({orderId,stripeId:charge.id});
+    const payment = Payment.build({orderId,stripeId:new mongoose.Types.ObjectId().toHexString()});
+    await payment.save();
+    await new PaymentCompeletedPublisher(natsWrapper.client).publish({
+        id: payment.stripeId,
+        orderId : payment.orderId
+    });
+    res.status(201).send({payment});
 
 });
 

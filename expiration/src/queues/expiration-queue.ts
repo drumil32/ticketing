@@ -1,5 +1,5 @@
 import Queue from 'bull';
-import { ExpirationCompeletedPublisher } from '../events/publishers/expiration-compeleted-publisher';
+import { ExpirationCompeletedPublisher } from '../events/publishers/expiration-completed-publisher';
 import { natsWrapper } from '../nats-wrapper';
 
 interface Payload {

@@ -1,6 +1,6 @@
-import { Publisher,ExpirationCompeletedEvent, Subjects } from "@micro_tickets/common";
+import { Publisher,ExpirationCompletedEvent, Subjects } from "@micro_tickets/common";
 
 
-export class ExpirationCompeletedPublisher extends Publisher<ExpirationCompeletedEvent> {
+export class ExpirationCompeletedPublisher extends Publisher<ExpirationCompletedEvent> {
     readonly subject = Subjects.ExpirationCompleted;
 }

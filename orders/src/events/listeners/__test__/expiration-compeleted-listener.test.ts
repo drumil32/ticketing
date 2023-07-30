@@ -1,9 +1,9 @@
-import { ExpirationCompeletedListener } from "../expiration-compeleted-listener"
+import { ExpirationCompeletedListener } from "../expiration-completed-listener"
 import { natsWrapper } from "../../../nats-wrapper";
 import { Ticket } from "../../../models/ticket-schema";
 import { Order, OrderStatus } from "../../../models/order-schema";
 import mongoose from "mongoose";
-import { ExpirationCompeletedEvent } from "@micro_tickets/common";
+import { ExpirationCompletedEvent } from "@micro_tickets/common";
 
 const setup = async () => {
     const listener = new ExpirationCompeletedListener(natsWrapper.client);
@@ -23,7 +23,7 @@ const setup = async () => {
     await order.save();
     // create one order
 
-    const data: ExpirationCompeletedEvent['data'] = {
+    const data: ExpirationCompletedEvent['data'] = {
         orderId: order.id
     }
 
