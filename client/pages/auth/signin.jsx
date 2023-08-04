@@ -14,14 +14,11 @@ const SignIn = () => {
         method: "post",
         body: { email, password },
         onSuccess: (data) => {
-            console.log(data)
             setCookies('token', data.token, { path: "/" });
             Router.push('/')
         }
     });
     const onSubmit = async (event) => {
-        console.log('ok signin request is sended')
-        console.log(email,'   ',password)
         event.preventDefault();
         await doRequest();
     };

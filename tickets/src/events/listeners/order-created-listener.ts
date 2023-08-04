@@ -20,9 +20,6 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
 
         await ticket.save();
 
-        console.log('order created listener here is updated ticket')
-        console.log(ticket)
-
         new TicketUpdatedPublisher(this.client).publish({
             id: ticket.id,
             title: ticket.title,

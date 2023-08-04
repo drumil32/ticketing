@@ -12,8 +12,6 @@ export const connectToNats = async () => {
         process.on('SIGINT',()=> natsWrapper.client.close());
         process.on('SIGTERM',()=> natsWrapper.client.close());
     } catch (error) {
-        console.log('we are inside connect to nats');
         console.error(error);
-        // console.error(error.message);
     }
 }

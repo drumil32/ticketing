@@ -11,7 +11,6 @@ const LandingPage = ({ currentUser }) => {
     url: `${publicRuntimeConfig.TICKETS_URL}/api/show-all-tickets`,
     method: 'get',
     onSuccess: (ticket) => {
-      console.log(ticket);
       setTicketList(ticket);
     }
   })

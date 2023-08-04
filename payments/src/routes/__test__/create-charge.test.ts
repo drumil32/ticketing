@@ -139,7 +139,6 @@ it('returns a 201 with valid inputs', async () => {
             orderId: order.id
         })
         .expect(201);
-    console.log(response.body)
 
     const {payment} = response.body;
     const dbPayment = await Payment.findOne({orderId:payment.orderId,stripeId:payment.stripeId})

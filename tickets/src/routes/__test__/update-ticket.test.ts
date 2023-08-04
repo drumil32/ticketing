@@ -24,13 +24,11 @@ it('return 401 if user is not authenticated in', async () => {
             price: 10
         })
         .expect(401);
-    console.log(response.body);
 });
 
 it('returns 401 if user is not authorized to update the ticket', async () => {
     // with this we created ticket which is own by abc@g.com
     let response = await createTicket('first', 10, 'abc@g.com', new mongoose.Types.ObjectId().toHexString());
-    console.log(response.body.ticket.id);
     let id = response.body.ticket.id;
 
     // now we try to update that ticket with user def@g.com
@@ -80,7 +78,6 @@ it('returns 400 if the user provides an invalid title or price', async () => {
             title: 'first',
             price: 10
         });
-    console.log(response.body);
     const ticketId = response.body.id;
     response = await request(app)
         .put(`/api/update-ticket/${ticketId}`)
@@ -130,7 +127,6 @@ it('returns 200 if the user provides valid inputs and ticket updated', async () 
             title: 'first',
             price: 10
         });
-    console.log(response.body);
     const ticketId = response.body.ticket.id;
     response = await request(app)
         .put(`/api/update-ticket/${ticketId}`)
@@ -139,7 +135,6 @@ it('returns 200 if the user provides valid inputs and ticket updated', async () 
             title: 'second',
             price: 20
         }).expect(200);
-    console.log(response.body);
     expect(response.body.ticket.title).toEqual('second');
     expect(response.body.ticket.price).toEqual(20);
 });

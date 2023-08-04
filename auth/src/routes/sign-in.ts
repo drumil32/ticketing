@@ -1,13 +1,13 @@
 import { Router, Request, Response } from 'express';
 import { body } from 'express-validator';
 import { User } from '../models/user-schema';
-import { validateRequest,BadRequestError } from '@micro_tickets/common';
+import { validateRequest, BadRequestError } from '@micro_tickets/common';
 import { Password } from '../service/password';
 import jwt from 'jsonwebtoken';
 import { Session } from 'express-session';
 
 interface CustomSession extends Session {
-  jwt: string;
+    jwt: string;
 }
 
 const router = Router();
@@ -28,8 +28,8 @@ router.post('/api/users/sign-in', [
         if (!existingUser) {
             throw new BadRequestError('invalid credentials');
         }
-        const passwordIsMatch = await Password.compare(password,existingUser.password);
-        if( !passwordIsMatch )
+        const passwordIsMatch = await Password.compare(password, existingUser.password);
+        if (!passwordIsMatch)
             throw new BadRequestError('invalid credentials');
 
         // generating JWT
@@ -43,7 +43,7 @@ router.post('/api/users/sign-in', [
         //     jwt: userJWT
         // }as CustomSession
         (existingUser)
-        res.status(200).send({user:existingUser,token:userJWT});
+        res.status(200).send({ user: existingUser, token: userJWT });
     });
 
 export { router as signInRouter };

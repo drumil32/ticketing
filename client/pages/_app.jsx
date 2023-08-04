@@ -11,17 +11,14 @@ const _app = ({ Component, pageProps }) => {
     const [currentUser, setCurrentUser] = useState(null);
     const [cookies] = useCookies(["token"]);
     const fun = async () => {
-        console.log('we are sending request')
         try {
             const { token } = cookies;
-            console.log(token)
             const response = await axios.get(`${publicRuntimeConfig.AUTH_URL}/api/users/current-user`, {
                 headers: {
                     Authorization: 'Bearer ' + token
                 }
             });
             const { currentUser } = response.data;
-            console.log(currentUser)
             setCurrentUser(currentUser);
         } catch (error) {
             setCurrentUser(null);

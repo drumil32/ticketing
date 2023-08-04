@@ -50,8 +50,6 @@ it('fetches orders for an particular user', async () => {
         .set('Authorization', `Bearer ${token1}`)
         .send()
         .expect(200);
-    console.log(response.body);
-    console.log(orderOne)
     expect(response.body.length).toEqual(2);
     expect(response.body[0].id).toEqual(orderOne.id);
     expect(response.body[0].ticket.id).toEqual(ticket1.id);

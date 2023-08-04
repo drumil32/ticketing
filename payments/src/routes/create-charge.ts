@@ -44,8 +44,6 @@ router.post('/api/create-charge', requireAuth, [
         amount: order.price*100,
         source:token
     });
-    console.log('charge obj')
-    console.log(charge);
 
     // const payment = Payment.build({orderId,stripeId:charge.id});
     const payment = Payment.build({orderId,stripeId:new mongoose.Types.ObjectId().toHexString()});
