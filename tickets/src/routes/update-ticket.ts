@@ -29,9 +29,6 @@ router.put('/api/update-ticket/:id', requireAuth,[
     if( ticket.orderId ){
         throw new BadRequestError('Cannot edit a reserved ticket');
     }
-    console.log('from update ticket')
-    console.log(ticket);
-    console.log(req.currentUser)
     if( ticket.userId!==req.currentUser.id ){
         throw new NotAuthorizedError();
     }

@@ -76,7 +76,6 @@ it("returns 200 if order is updated sucessfully", async () => {
     // we need to make sure that database is also updated
     const updatedOrder = await Order.findById(response.body.order.id);
     expect(updatedOrder.status).toEqual(OrderStatus.Cancelled);
-    console.log(response.body);
 });
 
 // it('emits an order cancelled event',async());

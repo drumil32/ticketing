@@ -33,18 +33,13 @@ router.post('/api/create-order', [
 
     const expiration = new Date();
     expiration.setSeconds(expiration.getSeconds() + Number(process.env.EXPIRATION_WINDOW_SECONDS));
-    console.log(expiration)
-    console.log(process.env.EXPIRATION_WINDOW_SECONDS)
     const order = Order.build({
         userId: req.currentUser.id,
         status: OrderStatus.Created,
         expiresAt: expiration,
         ticket:ticket.id
     });
-    console.log(order)
-    console.log(order.expiresAt)
     await order.save();
-    console.log('order is going to be published')
     new OrderCreatedPublisher(natsWrapper.client).publish({
         id: order.id,
         expiresAt: order.expiresAt.toISOString(),

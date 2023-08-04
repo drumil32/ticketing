@@ -7,7 +7,6 @@ const router = Router();
 
 router.get('/api/show-ticket/:id',async(req:Request,res:Response) => {
     const isValidId = mongoose.Types.ObjectId.isValid(req.params.id);
-    console.log(req.params.id)
     if( false===isValidId ){
         throw new BadRequestError('given id is not valid');
     }

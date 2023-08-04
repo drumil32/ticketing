@@ -73,7 +73,6 @@ it('create a ticket with valid parameters',async()=>{
             price: 20
         }).expect(201);
     tickets = await Ticket.find({});
-    console.log(tickets);
     expect(tickets.length).toEqual(1);
     expect(tickets[0].price).toEqual(20);
     expect(tickets[0].title).toEqual('asdfsdf');
