@@ -23,13 +23,6 @@ router.put('/api/cancel-order/:orderId', requireAuth, async (req: Request, res: 
     }
     order.status = OrderStatus.Cancelled;
     await order.save(); // here what will happen with ticket field we populated it above !!!
-    console.log({
-        id: order.id,
-        ticket: {
-            id: order.ticket,
-        },
-        version: order.version
-    })
     new OrderCancelledPublisher(natsWrapper.client).publish({
         id: order.id,
         ticket: {

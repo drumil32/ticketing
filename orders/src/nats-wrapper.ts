@@ -18,7 +18,6 @@ class NatsWrapper {
                 resolve();
             });
             this._client!.on('error',(err)=>{
-                console.log('we are inside nats wrapper');
                 console.error(err.message)
                 reject(err);
             })

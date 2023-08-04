@@ -16,8 +16,6 @@ const ShowAllOrders = ({ currentUser }) => {
                     authorization: "Bearer " + token,
                 }
             });
-            console.log(orderList)
-            console.log(typeof orderList)
             setOrderList(orderList);
         } catch (error) {
             console.log(error);

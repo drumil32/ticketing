@@ -12,7 +12,6 @@ const ShowTicket = () => {
     const { ticketId } = router.query;
     const [cookies] = useCookies(["token"]);
     const { token } = cookies;
-    console.log(ticketId);
     const { doRequest, errors } = useRequest({
         url: `${publicRuntimeConfig.ORDERS_URL}/api/create-order`,
         method: 'post',

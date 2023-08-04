@@ -25,7 +25,6 @@ const ShowOrder = ({ currentUser }) => {
         },
         token,
         onSuccess : (payment)=> {
-            console.log(payment);
             Router.push('/orders')
         }
     })
@@ -37,7 +36,6 @@ const ShowOrder = ({ currentUser }) => {
                     authorization: "Bearer " + token,
                 }
             });
-            console.log(order)
             setOrder(order);
         } catch (error) {
             alert(error.response.data.errors);
