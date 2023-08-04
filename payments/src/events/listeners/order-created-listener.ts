@@ -7,7 +7,6 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
     readonly subject = Subjects.OrderCreated;
     readonly queueGroupName = queueGroupName;
     async onMessage(data: OrderCreatedEvent['data'], msg: Message) {
-        console.log(data)
         const order = Order.build({
             id: data.id,
             version: data.version,
@@ -17,8 +16,6 @@ export class OrderCreatedListener extends Listener<OrderCreatedEvent> {
         });
         await order.save();
         const temp = await Order.find({});
-        console.log('checking for all order')
-        console.log(temp)
 
         msg.ack();
     }

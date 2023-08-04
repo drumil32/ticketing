@@ -55,7 +55,6 @@ router.post('/api/create-charge', requireAuth, [
         orderId : payment.orderId
     });
     res.status(201).send({payment});
-
 });
 
 export { router as CreateChargeRouter };

@@ -22,5 +22,5 @@ it('can fatch all tickets', async () => {
         .get('/api/show-all-tickets')
         .send()
         .expect(200);
-    expect(response.body.tickets.length).toEqual(3);
+    expect(response.body.length).toEqual(3);
 });

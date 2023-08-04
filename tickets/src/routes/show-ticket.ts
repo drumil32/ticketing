@@ -7,6 +7,7 @@ const router = Router();
 
 router.get('/api/show-ticket/:id',async(req:Request,res:Response) => {
     const isValidId = mongoose.Types.ObjectId.isValid(req.params.id);
+    console.log(req.params.id)
     if( false===isValidId ){
         throw new BadRequestError('given id is not valid');
     }
@@ -15,7 +16,7 @@ router.get('/api/show-ticket/:id',async(req:Request,res:Response) => {
     if( !ticket ) {
         throw new NotFoundError('given ticket id is not found');
     }
-    res.status(200).send({ticket});
+    res.status(200).send(ticket);
 })
 
 export {router as showTicketRouter}

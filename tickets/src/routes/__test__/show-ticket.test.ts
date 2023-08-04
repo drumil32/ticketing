@@ -32,8 +32,8 @@ it('return a ticket if ticket is found', async () => {
         .get(`/api/show-ticket/${id}`)
         .send()
         .expect(200);
-    expect(response.body.ticket.title).toEqual(title);
-    expect(response.body.ticket.price).toEqual(price);
-    expect(response.body.ticket.userId).toEqual(userId);
-    expect(response.body.ticket.id).toEqual(id);
+    expect(response.body.title).toEqual(title);
+    expect(response.body.price).toEqual(price);
+    expect(response.body.userId).toEqual(userId);
+    expect(response.body.id).toEqual(id);
 });

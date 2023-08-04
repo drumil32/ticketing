@@ -31,11 +31,11 @@ it("returns 404 if the order does not exist", async () => {
 });
 
 it("returns 401 if user doesn't own the order", async () => {
-    const ticket = await Ticket.build({ title: 'first', price: 20,id: new mongoose.Types.ObjectId().toHexString() }).save();
+    const ticket = await Ticket.build({ title: 'first', price: 20, id: new mongoose.Types.ObjectId().toHexString() }).save();
     const userId1 = new mongoose.Types.ObjectId();
 
     const token1 = await signin('drumil@gm.com', userId1.toString());
-    const {body:{order:{id:orderId}}} = await request(app)
+    const { body: { id: orderId } } = await request(app)
         .post('/api/create-order')
         .set('Authorization', `Bearer ${token1}`)
         .send({
@@ -43,7 +43,7 @@ it("returns 401 if user doesn't own the order", async () => {
         })
         .expect(201);
     const userId2 = new mongoose.Types.ObjectId();
-    const token2 = await signin('def@g.com',userId2.toString());
+    const token2 = await signin('def@g.com', userId2.toString());
     // const orderId = response.body.order.id;
     const response = await request(app)
         .get(`/api/show-order/${orderId}`)
@@ -53,11 +53,11 @@ it("returns 401 if user doesn't own the order", async () => {
 });
 
 it("returns 200 if order is get sucessfully", async () => {
-    const ticket = await Ticket.build({ title: 'first', price: 20,id: new mongoose.Types.ObjectId().toHexString()}).save();
+    const ticket = await Ticket.build({ title: 'first', price: 20, id: new mongoose.Types.ObjectId().toHexString() }).save();
     const userId = new mongoose.Types.ObjectId();
 
     const token = await signin('drumil@gm.com', userId.toString());
-    const {body:{order:{id:orderId}}} = await request(app)
+    const { body: { id: orderId } } = await request(app)
         .post('/api/create-order')
         .set('Authorization', `Bearer ${token}`)
         .send({
@@ -69,5 +69,5 @@ it("returns 200 if order is get sucessfully", async () => {
         .set('Authorization', `Bearer ${token}`)
         .send()
         .expect(200);
-    expect(response.body.order.id).toEqual(orderId);
+    expect(response.body.id).toEqual(orderId);
 });

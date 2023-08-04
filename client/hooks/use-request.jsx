@@ -3,14 +3,16 @@ import { useState } from "react";
 
 import React from 'react'
 
-const useRequest = ({ url, method, body, onSuccess }) => {
+const useRequest = ({ url, method, body,token, onSuccess }) => {
     const [errors, setErrors] = useState(null);
-    const doRequest = async () => {
+    const doRequest = async (props={}) => {
         try {
             setErrors('');
-            // console.log('from do request')
-            const response = await axios[method](url, body);
-            console.log(response);
+            const response = await axios[method](url,{ ...body,...props}, {
+                headers: {
+                    authorization: "Bearer " + token,
+                },
+            });
             if (onSuccess) {
                 onSuccess(response.data)
             }

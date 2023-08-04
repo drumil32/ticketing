@@ -37,7 +37,7 @@ it("returns 401 if user doesn't own the order", async () => {
     const userId1 = new mongoose.Types.ObjectId();
 
     const token1 = await signin('drumil@gm.com', userId1.toString());
-    const { body: { order: { id: orderId } } } = await request(app)
+    const { body: { id: orderId } } = await request(app)
         .post('/api/create-order')
         .set('Authorization', `Bearer ${token1}`)
         .send({
@@ -59,7 +59,7 @@ it("returns 200 if order is updated sucessfully", async () => {
     const userId = new mongoose.Types.ObjectId();
 
     const token = await signin('drumil@gm.com', userId.toString());
-    const { body: { order: { id: orderId } } } = await request(app)
+    const { body: { id: orderId } } = await request(app)
         .post('/api/create-order')
         .set('Authorization', `Bearer ${token}`)
         .send({
@@ -85,7 +85,7 @@ it('emits an order cancelled event', async () => {
     const userId = new mongoose.Types.ObjectId();
 
     const token = await signin('drumil@gm.com', userId.toString());
-    const { body: { order: { id: orderId } } } = await request(app)
+    const { body: { id: orderId  } } = await request(app)
         .post('/api/create-order')
         .set('Authorization', `Bearer ${token}`)
         .send({

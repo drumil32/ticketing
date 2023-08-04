@@ -55,7 +55,7 @@ router.post('/api/create-order', [
         userId: order.userId,
         version: order.version
     });
-    res.status(201).send({ order });
+    res.status(201).send( order );
 });
 
 export { router as createOrderRouter }

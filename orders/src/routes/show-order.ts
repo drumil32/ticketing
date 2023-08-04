@@ -18,7 +18,7 @@ router.get('/api/show-order/:orderId', requireAuth, async (req: Request, res: Re
     if (order.userId !== req.currentUser.id) {
         throw new NotAuthorizedError();
     }
-    res.status(200).send({ order });
+    res.status(200).send(order);
 });
 
 export { router as showOrderRouter }

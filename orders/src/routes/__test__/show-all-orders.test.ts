@@ -23,21 +23,21 @@ it('fetches orders for an particular user', async () => {
     const token1 = await signin('drumil@gm.com', userId1);
     const token2 = await signin('abc@gm.com', userId2);
 
-    const { body: { order: orderOne } } = await request(app)
+    const { body: orderOne } = await request(app)
         .post('/api/create-order')
         .set('Authorization', `Bearer ${token1}`)
         .send({
             ticketId: ticket1.id
         })
         .expect(201);
-    const { body: { order: orderTwo } } = await request(app)
+    const { body :orderTwo } = await request(app)
         .post('/api/create-order')
         .set('Authorization', `Bearer ${token1}`)
         .send({
             ticketId: ticket2.id
         })
         .expect(201);
-    const { body: { order: orderThree } } = await request(app)
+    const { body: orderThree } = await request(app)
         .post('/api/create-order')
         .set('Authorization', `Bearer ${token2}`)
         .send({
@@ -50,8 +50,10 @@ it('fetches orders for an particular user', async () => {
         .set('Authorization', `Bearer ${token1}`)
         .send()
         .expect(200);
-    expect(response.body.orders.length).toEqual(2);
-    expect(response.body.orders[0].id).toEqual(orderOne.id);
-    expect(response.body.orders[0].ticket.id).toEqual(ticket1.id);
-    expect(response.body.orders[1].ticket.id).toEqual(ticket2.id);
+    console.log(response.body);
+    console.log(orderOne)
+    expect(response.body.length).toEqual(2);
+    expect(response.body[0].id).toEqual(orderOne.id);
+    expect(response.body[0].ticket.id).toEqual(ticket1.id);
+    expect(response.body[1].ticket.id).toEqual(ticket2.id);
 });
